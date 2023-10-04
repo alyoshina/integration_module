@@ -1,0 +1,10 @@
+ubuntu 20.04
+Qt 6.7.0
+
+build OpcUa (https://code.qt.io/qt/qtopcua.git commit b883963769950ee855ce7741d5189b141ff3ee4f)
+/home/dts/Qt6_7/Tools/CMake/bin/cmake -DCMAKE_PREFIX_PATH="/home/dts/Qt6_7/6.7.0/gcc_64/lib/cmake/" -B build -DCMAKE_INSTALL_PREFIX=/home/dts/d_work/m12/prebuild/
+/home/dts/Qt6_7/Tools/CMake/bin/cmake --build build --target install
+
+build integration_module
+/home/dts/Qt6_7/Tools/CMake/bin/cmake -DCMAKE_PREFIX_PATH="/home/dts/Qt6_7/6.7.0/gcc_64/lib/cmake/;/home/dts/d_work/m12/prebuild/lib/cmake/" ..
+/home/dts/Qt6_7/Tools/CMake/bin/cmake --build .
