@@ -1,5 +1,6 @@
 #include "worker_object.h"
 #include "modbus_device.h"
+#include "opc_device.h"
 #include "data_utils.h"
 
 #include <QThread>
@@ -20,24 +21,24 @@ WorkerObject::WorkerObject() : QObject()
     thread->start();
 
     QSettings settingFile("config.ini", QSettings::IniFormat);
-    device = new ModbusDevice(settingFile);
+    initSettings(settingFile);
+    saveSettings(settingFile);
 
     //TODO device selection
-    /*
-    DeviceType type;
-    switch (type)
+    switch (deviceType)
     {
     case DeviceType::Modbus:
         device = new ModbusDevice(settingFile);
         break;
     case DeviceType::Opc:
-        //device = new OpcDevice(settingFile);
+        device = new OpcDevice(settingFile);
         break;
     }
-    */
 
     if (device) {
         connect(eventObject, SIGNAL(eventData(QJsonArray)), device, SLOT(onEventData(QJsonArray)));
+    } else {
+        qCritical() << "Device not selected";
     }
     
 }
@@ -49,6 +50,47 @@ WorkerObject::~WorkerObject() {
     delete device;
 }
 
+DeviceType WorkerObject::strToType(QString& str) {
+    if (str == QString("modbus")) {
+        return DeviceType::Modbus;
+    }
+    if (str == QString("opc")) {
+        return DeviceType::Opc;
+    }
+    return deviceType;
+}
+
+QString WorkerObject::typeToStr(DeviceType type) {
+    QString str("modbus");
+    switch (type) {
+    case DeviceType::Modbus:
+        str = QString("modbus");
+        break;
+    case DeviceType::Opc:
+        str = QString("opc");
+        break;
+    }
+    return str;
+}
+
+int WorkerObject::initSettings(QSettings &settingFile)
+{
+    settingFile.beginGroup("Settings");
+    QString type = settingFile.value("deviceType", "modbus").toString();
+    deviceType = strToType(type);
+    settingFile.endGroup();
+    settingFile.sync();
+
+    return 1;
+}
+
+void WorkerObject::saveSettings(QSettings &settingFile)
+{
+    settingFile.beginGroup("Settings");
+    settingFile.setValue("deviceType", typeToStr(deviceType));
+    settingFile.endGroup();
+    settingFile.sync();
+}
 
 void WorkerObject::onChannelToKm(QMap <int, float> map)
 {

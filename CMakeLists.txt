@@ -18,12 +18,14 @@ qt_add_executable(integration_module
     sources/db_service.cpp
     sources/event_object.cpp
     sources/modbus_device.cpp
+    sources/opc_device.cpp
     sources/worker_object.cpp
     headers/data_utils.h
     headers/db_service.h
     headers/event_object.h
     headers/idevice.h
     headers/modbus_device.h
+    headers/opc_device.h
     headers/worker_object.h
 )
 

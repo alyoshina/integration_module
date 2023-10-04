@@ -6,6 +6,8 @@
 #include <QObject>
 #include <QMap>
 
+enum class DeviceType : int { Modbus, Opc };
+
 class WorkerObject : public QObject
 {
     Q_OBJECT
@@ -16,10 +18,13 @@ public:
 private:
     EventObject *eventObject { nullptr };
     IDevice *device { nullptr };
-    enum class DeviceType { Modbus, Opc };
+    DeviceType deviceType { DeviceType::Modbus };
+    int initSettings(QSettings &settingFile);
+    void saveSettings(QSettings &settingFile);
+    DeviceType strToType(QString& str);
+    QString typeToStr(DeviceType type);
 
 public slots:
     void onChannelToKm(QMap <int, float> map);
-
 };
 
