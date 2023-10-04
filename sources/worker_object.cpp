@@ -20,8 +20,10 @@ WorkerObject::WorkerObject() : QObject()
     thread->start();
 
     QSettings settingFile("config.ini", QSettings::IniFormat);
+    device = new ModbusDevice(settingFile);
 
     //TODO device selection
+    /*
     DeviceType type;
     switch (type)
     {
@@ -32,6 +34,7 @@ WorkerObject::WorkerObject() : QObject()
         //device = new OpcDevice(settingFile);
         break;
     }
+    */
 
     if (device) {
         connect(eventObject, SIGNAL(eventData(QJsonArray)), device, SLOT(onEventData(QJsonArray)));
