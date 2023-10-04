@@ -14,7 +14,7 @@ typedef struct
     QString dbName;
     QString dbLogin;
     QString dbPassword;
-}DbSettings;
+} DbSettings;
 
 class DbService : public QObject
 {
