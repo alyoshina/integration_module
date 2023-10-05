@@ -5,14 +5,7 @@ QMap <int, float> channelToKmMap;
 
 HighLow floatToHighLow(float& number)
 {
-    union
-    {
-        quint32 i;
-        float f;
-    } u;
-
-    u.f = number;
-    return u32ToHighLow(u.i);
+    return u32ToHighLow(*reinterpret_cast<quint32*>(&number));
 }
 
 HighLow u32ToHighLow(quint32 number)
